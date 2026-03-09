@@ -14,10 +14,7 @@ description: "AI学术论文审稿助手，帮助用户完成顶级AI会议（CV
 触发此skill后，首先要求用户提供以下两项信息（缺一不可）：
 
 1. **论文PDF文件**——请用户提供本地PDF文件路径（如果用户给的是链接，请用户先下载到本地再提供路径）
-2. **审稿要求**——请用户提供以下信息：
-   - 投稿的会议/期刊名称（如CVPR、ICML、ICLR等）
-   - 需要review的模块（如Summary、Strengths、Weaknesses、Questions、Limitations等）
-   - 该会议/期刊的**官方审稿要求**（reviewer guidelines），可以是文本或截图
+2. **审稿要求**——请用户提供review页面的内容（通常用户会直接复制粘贴review表单页面，包含评分维度、各模块要求等）
 
 收齐以上信息后再进入第二步。如果用户暂时没有官方guidelines，可以先进入第二步解读论文，但提醒用户在写review前必须提供guidelines。
 
