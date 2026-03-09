@@ -12,16 +12,15 @@ description: "AI学术论文审稿助手，帮助用户完成顶级AI会议（CV
 ### 第一步：接收论文并确认审稿信息
 
 用户可能通过以下方式提供论文：
-- 直接发PDF文件
-- 给一个OpenReview链接（如 `https://openreview.net/forum?id=xxx`）
-- 给其他论文链接
+- 直接发PDF文件路径
+- 给一个论文链接（如OpenReview、arXiv等）
 
-**如果用户给的是OpenReview链接**：用浏览器工具（navigate）打开链接，找到PDF下载链接，下载PDF到本地后读取。同时从页面获取会议信息（通常页面上会显示是哪个会议的submission）。
+**如果用户给的是链接**：请用户自行下载PDF到本地，然后提供文件路径。
 
-**如果用户给的是PDF文件**：直接读取。
+**如果用户给的是PDF文件**：直接用Read工具读取。
 
 收到论文后，询问用户：
-- 这是投给哪个会议/期刊的？（如果从OpenReview页面能看出来就不用问）
+- 这是投给哪个会议/期刊的？
 - 需要review哪些模块？（如Summary、Strengths、Weaknesses、Questions、Limitations等）
 - 请提供该会议/期刊的**官方审稿要求**（reviewer guidelines）
 
@@ -104,18 +103,6 @@ description: "AI学术论文审稿助手，帮助用户完成顶级AI会议（CV
 6. **篇幅适当**——一般500-1500词。低分review可以更详细（需要充分论证），高分review可以适当简洁
 
 生成review后展示给用户。用户可能要求修改某些部分，按要求调整。
-
-### 第五步：浏览器填充Review（可选）
-
-如果用户提供了OpenReview的review页面链接，或要求在浏览器中填写review：
-
-1. 用浏览器工具打开review页面
-2. 点击"Official Review"按钮展开表单
-3. 用JavaScript批量填入各文本字段（Summary、Strengths And Weaknesses、Key Questions、Limitations等）
-4. 用JavaScript点选radio button评分（Soundness、Presentation、Significance、Originality、Overall Recommendation、Confidence）
-5. **不要**勾选LLM Policy和Code of Conduct的Affirmed checkbox——这是用户个人的合规承诺，必须由用户自己操作
-6. **不要**点击Submit按钮——提交操作由用户自己完成
-7. 填完后给用户一个汇总表，列出每个字段填了什么，让用户确认
 
 **写作风格要求**：review内容要像一个真实的人写的，不要太模板化。具体来说：
 - 避免过于整齐的排比句式和重复的句式结构
