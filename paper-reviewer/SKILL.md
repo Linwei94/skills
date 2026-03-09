@@ -11,20 +11,15 @@ description: "AI学术论文审稿助手，帮助用户完成顶级AI会议（CV
 
 ### 第一步：接收论文并确认审稿信息
 
-用户可能通过以下方式提供论文：
-- 直接发PDF文件路径
-- 给一个论文链接（如OpenReview、arXiv等）
+触发此skill后，首先要求用户提供以下两项信息（缺一不可）：
 
-**如果用户给的是链接**：请用户自行下载PDF到本地，然后提供文件路径。
+1. **论文PDF文件**——请用户提供本地PDF文件路径（如果用户给的是链接，请用户先下载到本地再提供路径）
+2. **审稿要求**——请用户提供以下信息：
+   - 投稿的会议/期刊名称（如CVPR、ICML、ICLR等）
+   - 需要review的模块（如Summary、Strengths、Weaknesses、Questions、Limitations等）
+   - 该会议/期刊的**官方审稿要求**（reviewer guidelines），可以是文本或截图
 
-**如果用户给的是PDF文件**：直接用Read工具读取。
-
-收到论文后，询问用户：
-- 这是投给哪个会议/期刊的？
-- 需要review哪些模块？（如Summary、Strengths、Weaknesses、Questions、Limitations等）
-- 请提供该会议/期刊的**官方审稿要求**（reviewer guidelines）
-
-如果用户还没有准备好官方guidelines，先进入第二步解读论文，但提醒用户在写review前需要提供guidelines。
+收齐以上信息后再进入第二步。如果用户暂时没有官方guidelines，可以先进入第二步解读论文，但提醒用户在写review前必须提供guidelines。
 
 ### 第二步：论文解读（中文）
 
