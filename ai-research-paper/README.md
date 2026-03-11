@@ -2,17 +2,70 @@
 
 A Claude Code skill for the full lifecycle of AI/ML research papers targeting CCF-A conferences (NeurIPS, ICML, ICLR, CVPR, ECCV, ACL, AAAI).
 
-## 9-Phase Pipeline
+## Pipeline
 
-1. **Idea Exploration** — literature review, brainstorming, 6-agent idea debate with AC gate
-2. **Research Proposal** — detailed method with theory, positioning, contributions
-3. **Experiment Planning** — comprehensive plan at top-venue scale
-4. **Pilot Experiments** — proof-of-concept, baseline reproduction, sanity checks
-5. **Method Iteration** — revise method based on pilot results
-6. **Full Experiments** — autonomous GPU monitoring and execution across local/remote machines
-7. **Result Analysis** — 6-agent result debate, narrative agreement
-8. **Paper Writing + Figures** — publication-quality seaborn figures + venue-compliant LaTeX
-9. **Internal Review & Polish** — self-review, Codex cross-review, rebuttal preparation
+```
+Phase 0: Setup (only user interaction)
+  └─ venue / topic / compute → plan/config.md + plan/constraints.md + references/venue_requirements.md
+         │
+         ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                     IDEA LOOP  (Round N)                           │
+│                                                                    │
+│  Phase 1: Idea Exploration                                         │
+│    [Round 1] literature review → idea generation (3-5 candidates)  │
+│    [Round 2+] skip lit review, read idea_history.md for constraints│
+│    → 6-agent Idea Debate → AC gate                                 │
+│      AC: REVISE → auto-revise & re-debate (max 3×)                 │
+│      AC: REJECT → try next candidate                               │
+│      AC: ACCEPT ↓                                                  │
+│         │                                                          │
+│  Phase 2: Research Proposal                                        │
+│    method + theory + contributions → plan/proposal.md              │
+│         │                                                          │
+│  Phase 3: Experiment Planning                                      │
+│    datasets / baselines / ablations → plan/experiment_plan.md      │
+│         │                                                          │
+│  Phase 4: Pilot Experiments                                        │
+│    implement method → reproduce baselines → pilot run              │
+│    PASS ──────────────────────────────────────────── exit loop ──┐ │
+│    FAIL ↓                                                        │ │
+│         │                                                        │ │
+│  Phase 5: Method Iteration  (max 3-5 tweaks)                     │ │
+│    diagnose → revise → re-pilot                                  │ │
+│    FIXED ─────────────────────────────────────────── exit loop ──┤ │
+│    EXHAUSTED:                                                    │ │
+│      → archive idea to plan/idea_history.md                      │ │
+│      → move code to experiments/archived/round_N/               │ │
+│      → notify-telegram: idea failed                              │ │
+│      → Round N+1: back to Phase 1 ───────────────────────────── ┘ │
+│                                                        ▲           │
+│  Every 3 failed rounds → notify-telegram: ask to      │           │
+│  continue or pivot topic ─────────────────────────────┘           │
+└────────────────────────────────────────────────────────────────────┘
+         │ (pilot passed)
+         ▼
+Phase 6: Full Experiments  (autonomous)
+  GPU monitoring + greedy scheduling + remote SSH execution
+  → experiments/results/*.csv
+         │
+         ▼
+Phase 7: Result Analysis
+  6-agent Result Debate → narrative + additional experiments (if needed)
+  → plan/result_debate.md
+         │
+         ▼
+Phase 8: Paper Writing + Figures
+  read constraints.md + venue_requirements.md
+  seaborn figures + parallel LaTeX writing → paper/main.tex
+         │
+         ▼
+Phase 9: Internal Review & Polish
+  self-review checklist + Codex cross-review + rebuttal prep
+         │
+         ▼
+  notify-telegram: pipeline finished → hand off for submission
+```
 
 ## Installation
 
