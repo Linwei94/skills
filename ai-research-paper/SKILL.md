@@ -242,18 +242,29 @@ Action needed: <none | description of what the user needs to do>
 
 After completing each phase, commit and push the new artifacts to GitHub. This ensures progress is never lost and collaborators can track the project.
 
+**Linear path (idea passes pilot):**
+
 | After Phase | Commit message pattern | Files to commit |
 |-------------|----------------------|-----------------|
 | Phase 0 | `init: project setup — [venue] / [topic]` | `plan/config.md`, `plan/constraints.md`, `references/venue_requirements.md`, `plan/TODO.md`, `README.md`, `.gitignore` |
-| Phase 1 | `plan: literature review and idea exploration (round N)` | `plan/literature_review.md`, `plan/idea_summary.md`, `plan/idea_debate.md`, `plan/idea_history.md`, `plan/TODO.md` |
-| Phase 2 | `plan: research proposal` | `plan/proposal.md`, `plan/TODO.md` |
-| Phase 3 | `plan: experiment plan` | `plan/experiment_plan.md`, `references/venue_requirements.md`, `plan/TODO.md` |
-| Phase 4 | `experiments: pilot — [method] on [dataset]` | `experiments/methods/`, `experiments/results/baseline_reproduction.md`, `plan/TODO.md` |
-| Phase 5 | `experiments: method iteration [N] (idea round [M])` | `experiments/methods/`, `experiments/results/method_iterations.md`, `plan/idea_history.md`, `plan/TODO.md` |
-| Phase 6 | `experiments: [experiment name] complete` | `experiments/`, `plan/TODO.md` (commit incrementally as experiments finish) |
+| Phase 1 | `plan: idea exploration round [N] — [idea title]` | `plan/literature_review.md`, `plan/idea_summary.md`, `plan/idea_debate.md`, `plan/idea_history.md`, `plan/TODO.md` |
+| Phase 2 | `plan: research proposal — [idea title]` | `plan/proposal.md`, `plan/TODO.md` |
+| Phase 3 | `plan: experiment plan — [idea title]` | `plan/experiment_plan.md`, `references/venue_requirements.md`, `plan/TODO.md` |
+| Phase 4 | `experiments: pilot passed — [method] on [dataset]` | `experiments/methods/`, `experiments/results/baseline_reproduction.md`, `plan/TODO.md` |
+| Phase 5 | `experiments: method iteration [N] (idea round [M])` | `experiments/methods/`, `experiments/results/method_iterations.md`, `plan/TODO.md` |
+| Phase 6 | `experiments: [experiment name] complete` | `experiments/`, `plan/TODO.md` (commit incrementally) |
 | Phase 7 | `plan: result analysis and narrative` | `plan/result_debate.md`, `plan/TODO.md` |
 | Phase 8 | `paper: draft with figures` | `paper/main.tex`, `paper/figures/`, `paper/*.sty`, `plan/TODO.md` |
 | Phase 9 | `paper: review polish and rebuttal prep` | `paper/main.tex`, `plan/rebuttal_prep.md`, `plan/TODO.md` |
+
+**Iteration path (idea fails pilot → loop back):**
+
+| Trigger | Commit message pattern | Files to commit |
+|---------|----------------------|-----------------|
+| Phase 4 pilot fails | `experiments: pilot failed — idea round [N] archived` | `experiments/results/baseline_reproduction.md`, `plan/idea_history.md`, `plan/TODO.md` |
+| Phase 5 all iterations exhausted | `experiments: idea round [N] exhausted — archived, rolling back` | `experiments/results/method_iterations.md`, `experiments/archived/round_[N]/`, `plan/idea_history.md`, `plan/TODO.md` |
+| ↳ Loop back to Phase 1 | `plan: idea exploration round [N+1] — [new idea title]` | `plan/idea_summary.md`, `plan/idea_debate.md`, `plan/idea_history.md`, `plan/TODO.md` |
+| ↳ Continue Phase 2–4 | *(same as linear path above, with updated round number)* | |
 
 Rules:
 - Always `git add` specific files, never `git add -A` (avoid committing large datasets, checkpoints, or secrets).
