@@ -37,12 +37,12 @@ Phase 0: Setup (only user interaction)
 │    FIXED ─────────────────────────────────────────── exit loop ──┤ │
 │    EXHAUSTED:                                                    │ │
 │      → archive idea to plan/idea_history.md                      │ │
-│      → move code to experiments/archived/round_N/               │ │
+│      → move code to experiments/archived/round_N/                │ │
 │      → notify-telegram: idea failed                              │ │
-│      → Round N+1: back to Phase 1 ───────────────────────────── ┘ │
+│      → Round N+1: back to Phase 1 ───────────────────────────────┘ │
 │                                                        ▲           │
-│  Every 3 failed rounds → notify-telegram: ask to      │           │
-│  continue or pivot topic ─────────────────────────────┘           │
+│  Every 3 failed rounds → notify-telegram: ask to       │           │
+│  continue or pivot topic ──────────────────────────────┘           │
 └────────────────────────────────────────────────────────────────────┘
          │ (pilot passed)
          ▼
