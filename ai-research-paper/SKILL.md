@@ -121,6 +121,7 @@ Every project follows this exact layout. Create it at the start:
 │   ├── TODO.md            # Master todolist — tracks all phases
 │   ├── literature_review.md
 │   ├── idea_summary.md
+│   ├── idea_history.md    # Archive of ALL attempted ideas and their outcomes
 │   ├── proposal.md
 │   └── experiment_plan.md
 ├── experiments/           # All code and results
@@ -129,7 +130,8 @@ Every project follows this exact layout. Create it at the start:
 │   ├── scripts/
 │   ├── utils/
 │   ├── configs/
-│   └── results/
+│   ├── results/
+│   └── archived/          # Failed idea rounds (archived/round_1/, round_2/, ...)
 └── paper/                 # LaTeX source and figures
     ├── main.tex
     ├── figures/
@@ -180,11 +182,11 @@ After completing each phase, commit and push the new artifacts to GitHub. This e
 | After Phase | Commit message pattern | Files to commit |
 |-------------|----------------------|-----------------|
 | Phase 0 | `init: project setup — [venue] / [topic]` | `plan/config.md`, `plan/TODO.md`, `README.md`, `.gitignore` |
-| Phase 1 | `plan: literature review and idea exploration` | `plan/literature_review.md`, `plan/idea_summary.md`, `plan/idea_debate.md`, `plan/TODO.md` |
+| Phase 1 | `plan: literature review and idea exploration (round N)` | `plan/literature_review.md`, `plan/idea_summary.md`, `plan/idea_debate.md`, `plan/idea_history.md`, `plan/TODO.md` |
 | Phase 2 | `plan: research proposal` | `plan/proposal.md`, `plan/TODO.md` |
 | Phase 3 | `plan: experiment plan` | `plan/experiment_plan.md`, `plan/venue_requirements.md`, `plan/TODO.md` |
 | Phase 4 | `experiments: pilot — [method] on [dataset]` | `experiments/methods/`, `experiments/results/baseline_reproduction.md`, `plan/TODO.md` |
-| Phase 5 | `experiments: method iteration [N]` | `experiments/methods/`, `experiments/results/method_iterations.md`, `plan/TODO.md` |
+| Phase 5 | `experiments: method iteration [N] (idea round [M])` | `experiments/methods/`, `experiments/results/method_iterations.md`, `plan/idea_history.md`, `plan/TODO.md` |
 | Phase 6 | `experiments: [experiment name] complete` | `experiments/`, `plan/TODO.md` (commit incrementally as experiments finish) |
 | Phase 7 | `plan: result analysis and narrative` | `plan/result_debate.md`, `plan/TODO.md` |
 | Phase 8 | `paper: draft with figures` | `paper/main.tex`, `paper/figures/`, `paper/*.sty`, `plan/TODO.md` |
@@ -218,13 +220,15 @@ Create `plan/TODO.md` at project initialization and keep it updated throughout t
 - [x] → git commit & push
 
 ## Phase 1: Idea Exploration
-- [ ] Literature review (plan/literature_review.md)
-- [ ] Idea generation — 3-5 directions scored, best auto-selected
+- [ ] Literature review (plan/literature_review.md) — [skip if Round 2+]
+- [ ] Check idea history for archived ideas (plan/idea_history.md) — [Round 2+ only]
+- [ ] Idea generation — 3-5 directions scored, best auto-selected (Round [N])
 - [ ] Idea debate — 6 reviewers completed (plan/idea_debate.md)
 - [ ] AC decision: [ACCEPT/REVISE/REJECT] — auto-handled
 - [ ] Idea refinement (plan/idea_summary.md)
+- [ ] Idea history updated (plan/idea_history.md)
 - [ ] → git commit & push
-- [ ] → notify-telegram: Phase 1 complete
+- [ ] → notify-telegram: Phase 1 complete (Round [N])
 
 ## Phase 2: Research Proposal
 - [ ] Draft proposal (plan/proposal.md)
@@ -250,8 +254,11 @@ Create `plan/TODO.md` at project initialization and keep it updated throughout t
 - [ ] Issue identified from pilot: [description]
 - [ ] Method revised: [what changed]
 - [ ] Re-run pilot to verify fix
-- [ ] → loop back to Phase 4 if still failing
-- [ ] → notify-telegram: if iteration limit exhausted and falling back
+- [ ] → loop back to Phase 4 if still failing (max 3-5 method iterations)
+- [ ] If all iterations exhausted: archive idea to plan/idea_history.md
+- [ ] If archived: clean up experiments to experiments/archived/round_[N]/
+- [ ] → notify-telegram: idea failed, rolling back to Phase 1 for new idea
+- [ ] → loop back to Phase 1 Step 1.2 for new idea (Round [N+1])
 
 ## Phase 6: Full Experiments
 - [ ] All datasets prepared (~/dataset/)
@@ -305,6 +312,49 @@ Create `plan/TODO.md` at project initialization and keep it updated throughout t
 ```
 
 Update this file at every significant step. When an experiment completes, mark it done. When an issue arises, log it. This file should always reflect the current project state so that any conversation (even a new one) can pick up where things left off.
+
+## Idea History (plan/idea_history.md)
+
+Create `plan/idea_history.md` at the start of Phase 1 and maintain it throughout the project. This file archives **every idea that has been attempted**, including those that passed the idea debate but failed at pilot experiments. Its primary purpose is to prevent the pipeline from revisiting failed directions.
+
+```markdown
+# Idea History: [Research Topic]
+
+**Created:** [date]
+**Last Updated:** [date]
+
+## Active Idea
+- **Round**: [current round number]
+- **Title**: [current idea title]
+- **Status**: [exploring / debating / piloting / accepted / failed]
+
+## Archived Ideas (DO NOT REUSE)
+
+### Round 1: [idea title]
+- **Summary**: [1-paragraph description of the idea]
+- **Key Mechanism**: [core technical contribution]
+- **Idea Debate Outcome**: [ACCEPT / REVISE & RESUBMIT / REJECT] — AC score: [X/10]
+- **Pilot Experiment Result**: [passed / failed — brief description]
+- **Failure Reason**: [why this idea was abandoned — e.g., "pilot showed no improvement over baseline on CIFAR-10-C", "method diverges after 100 steps", "AC rejected due to insufficient novelty"]
+- **Lessons Learned**: [what we learned from this attempt — e.g., "entropy minimization alone is not sufficient", "need to handle class imbalance explicitly"]
+- **Date Archived**: [date]
+
+### Round 2: [idea title]
+- ...
+
+### Round N: [idea title]
+- ...
+```
+
+**Rules for Idea History:**
+1. **Every idea that enters Phase 1 Step 1.3 (Idea Debate) must be recorded**, regardless of outcome.
+2. When an idea is archived (due to debate rejection OR pilot failure), record the failure reason and lessons learned.
+3. When generating new ideas (Phase 1 Step 1.2), the pipeline **MUST read `plan/idea_history.md` first** and explicitly avoid:
+   - Ideas that are semantically similar to any archived idea
+   - Ideas that rely on the same core mechanism that previously failed
+   - Ideas that ignore the lessons learned from previous rounds
+4. The idea generation prompt must include the full list of archived ideas and their failure reasons as negative constraints.
+5. There is no limit on the number of rounds — the pipeline keeps generating new ideas until one passes both the idea debate AND pilot experiments.
 
 ## Agent Model Hierarchy
 
@@ -370,15 +420,26 @@ Save output to `plan/literature_review.md`.
 
 Based on the literature review, autonomously generate and select a research direction. Do NOT ask the user for input — the pipeline should proceed end-to-end without human intervention.
 
-1. **Explore context**: Review the literature review, understand the research landscape, identify the most promising gaps.
-2. **Generate 3-5 research directions**, scoring each on:
+1. **Check idea history**: If `plan/idea_history.md` exists, read it first. Extract:
+   - All archived idea summaries and their core mechanisms
+   - All failure reasons and lessons learned
+   - These become **hard negative constraints** — the new ideas MUST differ from all archived ideas in their core mechanism and MUST incorporate the lessons learned.
+
+2. **Explore context**: Review the literature review, understand the research landscape, identify the most promising gaps.
+
+3. **Generate 3-5 research directions**, scoring each on:
    - **Novelty** (1-5): How new is this compared to existing work?
    - **Feasibility** (1-5): Can this be implemented and validated with available resources?
    - **Impact** (1-5): Would this excite reviewers at the target venue?
    - **Risk** (1-5, lower is better): How likely is it to fail fundamentally?
-   - **Composite score**: (Novelty + Feasibility + Impact) - Risk
-3. **Auto-select the direction with the highest composite score.** Log all directions and scores in `plan/idea_summary.md` for traceability.
-4. If the user provided any hints or preferences in their initial prompt, factor those into the scoring (e.g., boost feasibility for directions aligned with stated constraints).
+   - **Differentiation from history** (pass/fail): Is this idea sufficiently different from ALL archived ideas? If it relies on the same core mechanism as any failed idea, it FAILS and is discarded.
+   - **Composite score**: (Novelty + Feasibility + Impact) - Risk (only for ideas that pass the differentiation check)
+
+4. **Auto-select the direction with the highest composite score.** Log all directions and scores in `plan/idea_summary.md` for traceability. If this is not the first round, also log why each new direction is different from the archived ideas.
+
+5. If the user provided any hints or preferences in their initial prompt, factor those into the scoring (e.g., boost feasibility for directions aligned with stated constraints).
+
+6. **Update `plan/idea_history.md`**: Record the selected idea as the "Active Idea" with the current round number.
 
 ### Step 1.3: Idea Debate (6-agent multi-perspective review)
 
@@ -613,17 +674,42 @@ After each revision, re-run the pilot experiment. Compare against the previous v
 
 ### 5.4: Iteration Loop
 
-Repeat 5.1-5.3 until the pilot shows the method works. If after 3-5 iterations the core hypothesis still fails, automatically fall back to the next-highest-scored direction from Phase 1 Step 1.2 and restart from Phase 2 (Proposal). Log the failure and rationale in `plan/TODO.md`. **Invoke `notify-telegram`** to inform the user that the current direction failed and a fallback is in progress.
+Repeat 5.1-5.3 until the pilot shows the method works. **Maximum 3-5 method-level iterations** (tweaking hyperparameters, loss functions, etc.).
+
+### 5.5: Idea-Level Rollback (if method iteration fails)
+
+If after 3-5 method iterations the pilot still fails, this means the **core idea itself** is flawed — not just the implementation. In this case:
+
+1. **Archive the failed idea**: Update `plan/idea_history.md` with:
+   - Full idea summary and core mechanism
+   - Idea debate outcome (AC score)
+   - Pilot experiment results (what was tried, what metrics were observed)
+   - Failure reason (specific and actionable — e.g., "entropy minimization causes class collapse under label shift", not just "didn't work")
+   - Lessons learned (what future ideas should avoid or incorporate)
+   - Date archived
+
+2. **Clean up experiment artifacts**: Move the current idea's experiment code to `experiments/archived/round_N/` to keep the workspace clean while preserving the work.
+
+3. **Notify user**: **Invoke `notify-telegram`** to inform the user that the current idea (Round N) failed pilot validation and the pipeline is rolling back to explore a new idea direction.
+
+4. **Loop back to Phase 1 Step 1.2** (Idea Generation): Generate entirely new ideas with the updated idea history as a negative constraint. The pipeline does NOT re-run the literature review (Phase 1 Step 1.1) — the existing literature review is reused. It goes directly to idea generation → idea debate → proposal → pilot.
+
+5. **No limit on idea rounds**: The pipeline keeps generating new ideas until one passes both the idea debate AND pilot experiments. However, after every 3 failed rounds, **invoke `notify-telegram`** with a summary of all failed ideas and ask the user whether to continue exploring or pivot to a different research topic entirely.
 
 Save iteration history in `experiments/results/method_iterations.md`:
 ```markdown
-## Iteration 1: [date]
+## Round [N] — Idea: [idea title]
+
+### Iteration 1: [date]
 - Change: [what was changed]
 - Result: [pilot metric before → after]
 - Analysis: [why it did/didn't help]
 
-## Iteration 2: [date]
+### Iteration 2: [date]
 ...
+
+### Outcome: [PASSED → proceed to Phase 6 / FAILED → archived, rolling back to Phase 1]
+- Failure reason: [if failed]
 ```
 
 ---
@@ -966,32 +1052,44 @@ Phase 0: Interactive Setup (ONLY user interaction)
         │ ask: multi-select which machines to use
         │ saves: plan/config.md
         ▼
-Phase 1: Idea Exploration ──────────────────────────────────────┐
-        │ literature review → auto idea generation → idea debate │
-        │ 6-reviewer debate + AC gate (auto-handled)            │
-        │ saves: plan/literature_review.md, plan/idea_summary.md│
-        │ AC: REJECT → auto-fallback to next direction          │
-        │ AC: REVISE → auto-revise & re-debate (max 3 cycles)   │
-        │ AC: ACCEPT ↓                                          │
-        ▼                                                       │
-Phase 2: Research Proposal ◄────────────────────────────────────┘
-        │ detailed method with theory, contributions
-        │ saves: plan/proposal.md (auto-proceed)
-        ▼
-Phase 3: Experiment Planning
-        │ datasets, baselines, ablations, compute budget
-        │ saves: plan/experiment_plan.md (auto-proceed)
-        ▼
-Phase 4: Pilot Experiments
-        │ implement method, reproduce baselines, pilot test
-        │ FAIL? ──→ Phase 5
-        │ PASS? ──→ Phase 6
-        ▼
-Phase 5: Method Iteration (loop)
-        │ diagnose → revise → re-pilot
-        │ loop until pilot passes (max 3-5 iterations)
-        │ still failing? → auto-fallback to next direction
-        │ fixed? ↓
+┌─────────────────────────────────────────────────────────────────────┐
+│                    IDEA EXPLORATION LOOP                            │
+│  (repeats with new ideas until pilot passes)                       │
+│                                                                    │
+│  Phase 1: Idea Exploration ────────────────────────────────┐       │
+│          │ [Round 1+] check plan/idea_history.md            │       │
+│          │ [Round 1 only] literature review                 │       │
+│          │ auto idea generation (avoid archived ideas)      │       │
+│          │ → idea debate (6 reviewers + AC gate)            │       │
+│          │ AC: REJECT → try next direction                  │       │
+│          │ AC: REVISE → auto-revise & re-debate (max 3)     │       │
+│          │ AC: ACCEPT ↓                                     │       │
+│          ▼                                                  │       │
+│  Phase 2: Research Proposal                                 │       │
+│          │ detailed method with theory, contributions       │       │
+│          │ saves: plan/proposal.md                           │       │
+│          ▼                                                  │       │
+│  Phase 3: Experiment Planning                               │       │
+│          │ datasets, baselines, ablations, compute budget    │       │
+│          │ saves: plan/experiment_plan.md                    │       │
+│          ▼                                                  │       │
+│  Phase 4: Pilot Experiments                                 │       │
+│          │ implement method, reproduce baselines, pilot test │       │
+│          │ PASS? ──→ exit loop → Phase 6                    │       │
+│          │ FAIL? ──→ Phase 5                                │       │
+│          ▼                                                  │       │
+│  Phase 5: Method Iteration (max 3-5 tweaks)                 │       │
+│          │ diagnose → revise → re-pilot                     │       │
+│          │ fixed? → exit loop → Phase 6                     │       │
+│          │ still failing after 3-5 iterations?              │       │
+│          │   → archive idea to plan/idea_history.md         │       │
+│          │   → notify-telegram: idea failed                 │       │
+│          └──→ back to Phase 1 (new idea, Round N+1) ────────┘       │
+│                                                                    │
+│  Every 3 failed rounds → notify-telegram: ask user to continue     │
+│  or pivot topic                                                    │
+└─────────────────────────────────────────────────────────────────────┘
+        │ (pilot passed)
         ▼
 Phase 6: Full Experiments (AUTONOMOUS)
         │ monitor GPUs, greedy scheduling, run everything
@@ -1018,7 +1116,7 @@ Done → notify-telegram: pipeline finished → Hand off to user for submission
 - **Phase 0 is the ONLY interactive phase** — user selects venue, topic, and machines.
 - All subsequent phases run **fully autonomously** end-to-end. No further user input required.
 - Phases 1-3: autonomous (auto-select idea direction, auto-proceed through proposal and planning)
-- Phases 4-5: autonomous (run pilots, iterate, auto-fallback on failure, consult user only if 3-5 iteration limit exhausted)
+- Phases 4-5: autonomous (run pilots, iterate method 3-5 times; if still failing, archive idea and loop back to Phase 1 with a completely new idea; consult user after every 3 failed idea rounds)
 - Phase 6: autonomous (run everything, report when done)
 - Phases 7-9: autonomous (auto-decide on analysis, auto-write and review paper)
 - Git commit + push after every phase
