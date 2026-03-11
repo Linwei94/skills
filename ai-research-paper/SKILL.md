@@ -9,9 +9,10 @@ This skill guides the full lifecycle of an AI/ML research paper targeting CCF-A 
 
 **Phase 1: Idea Exploration** — keyword → literature review → autonomous idea generation → idea debate (6 reviewers + AC gate)
 **Phase 2: Research Proposal** — detailed method with theory, positioning, expected contributions
-**Phase 3: Experiment Planning** — comprehensive plan at top-venue scale
+**Phase 3: Pilot Experiment Design** — minimal experiment plan (1 dataset, 1-2 baselines) sufficient to validate the core idea
 **Phase 4: Pilot Experiments** — proof-of-concept, baseline reproduction, sanity checks
 **Phase 5: Method Iteration** — revise method based on pilot results, may loop back to Phase 4
+**Phase 5.5: Full Experiment Planning** — comprehensive plan (all datasets / baselines / ablations / analyses) after pilot passes, before full runs
 **Phase 6: Full Experiments** — autonomous execution of all main experiments, ablations, analyses
 **Phase 7: Result Analysis** — result debate (6 analysts), auto-decides on additional experiments
 **Phase 8: Paper Writing + Figures** — publication-quality figures + parallel section writing + compile LaTeX
@@ -184,7 +185,8 @@ Every project follows this exact layout. Create it at the start:
 │   ├── idea_summary.md
 │   ├── idea_history.md    # Archive of ALL attempted ideas and their outcomes
 │   ├── proposal.md
-│   └── experiment_plan.md
+│   ├── pilot_experiment_plan.md  # Minimal plan for pilot (Phase 3)
+│   └── experiment_plan.md        # Full plan after pilot passes (Phase 5.5)
 ├── references/            # External reference materials
 │   └── venue_requirements.md  # Venue submission rules fetched in real-time (Phase 0)
 ├── experiments/           # All code and results
@@ -249,9 +251,10 @@ After completing each phase, commit and push the new artifacts to GitHub. This e
 | Phase 0 | `init: project setup — [venue] / [topic]` | `plan/config.md`, `plan/constraints.md`, `references/venue_requirements.md`, `plan/TODO.md`, `README.md`, `.gitignore` |
 | Phase 1 | `plan: idea exploration round [N] — [idea title]` | `plan/literature_review.md`, `plan/idea_summary.md`, `plan/idea_debate.md`, `plan/idea_history.md`, `plan/TODO.md` |
 | Phase 2 | `plan: research proposal — [idea title]` | `plan/proposal.md`, `plan/TODO.md` |
-| Phase 3 | `plan: experiment plan — [idea title]` | `plan/experiment_plan.md`, `references/venue_requirements.md`, `plan/TODO.md` |
+| Phase 3 | `plan: pilot experiment design — [idea title]` | `plan/pilot_experiment_plan.md`, `plan/TODO.md` |
 | Phase 4 | `experiments: pilot passed — [method] on [dataset]` | `experiments/methods/`, `experiments/results/baseline_reproduction.md`, `plan/TODO.md` |
 | Phase 5 | `experiments: method iteration [N] (idea round [M])` | `experiments/methods/`, `experiments/results/method_iterations.md`, `plan/TODO.md` |
+| Phase 5.5 | `plan: full experiment plan — [idea title]` | `plan/experiment_plan.md`, `plan/TODO.md` |
 | Phase 6 | `experiments: [experiment name] complete` | `experiments/`, `plan/TODO.md` (commit incrementally) |
 | Phase 7 | `plan: result analysis and narrative` | `plan/result_debate.md`, `plan/TODO.md` |
 | Phase 8 | `paper: draft with figures` | `paper/main.tex`, `paper/figures/`, `paper/*.sty`, `plan/TODO.md` |
@@ -309,9 +312,8 @@ Create `plan/TODO.md` at project initialization and keep it updated throughout t
 - [ ] → git commit & push
 - [ ] → notify-telegram: Phase 2 complete
 
-## Phase 3: Experiment Planning
-- [ ] Experiment plan drafted (plan/experiment_plan.md)
-- [ ] Resource discovery (local + remote GPUs)
+## Phase 3: Pilot Experiment Design
+- [ ] Pilot experiment plan drafted (plan/pilot_experiment_plan.md)
 - [ ] → git commit & push
 - [ ] → notify-telegram: Phase 3 complete
 
@@ -333,6 +335,15 @@ Create `plan/TODO.md` at project initialization and keep it updated throughout t
 - [ ] If archived: clean up experiments to experiments/archived/round_[N]/
 - [ ] → notify-telegram: idea failed, rolling back to Phase 1 for new idea
 - [ ] → loop back to Phase 1 Step 1.2 for new idea (Round [N+1])
+
+## Phase 5.5: Full Experiment Planning (after pilot passes)
+- [ ] Full experiment plan drafted (plan/experiment_plan.md)
+- [ ] All datasets listed (4-8 datasets)
+- [ ] All baselines listed (5-10 baselines)
+- [ ] Ablation and analysis experiments defined
+- [ ] Resource discovery (local + remote GPUs)
+- [ ] → git commit & push
+- [ ] → notify-telegram: Phase 5.5 complete
 
 ## Phase 6: Full Experiments
 - [ ] All datasets prepared (~/dataset/)
@@ -618,82 +629,36 @@ Save to `plan/proposal.md`.
 
 ---
 
-## Phase 3: Experiment Planning
+## Phase 3: Pilot Experiment Design
 
-Write a comprehensive experiment plan that meets top-venue standards. The plan must demonstrate thoroughness — reviewers at CCF-A venues expect extensive empirical validation.
+Design a **minimal** experiment plan sufficient to validate the core idea. Keep it lean — the goal is to answer one question: does the core mechanism work at all?
 
-### Experiment Plan Structure
-
-Save to `plan/experiment_plan.md` with this structure:
+Save to `plan/pilot_experiment_plan.md`:
 
 ```markdown
-# Experiment Plan: [Paper Title]
+# Pilot Experiment Plan: [Idea Title]
 
-## 1. Datasets & Benchmarks
-- Table of ALL datasets with: name, task, #classes, #samples, shift type, source
-- Include standard benchmarks (CIFAR-C, ImageNet-C, WILDS, etc.)
-- Include domain-specific datasets relevant to the application
-- Aim for 4-8 datasets minimum
+## Core Hypothesis
+[One sentence: what specific behavior of the method should we observe to call the pilot a success?]
 
-## 2. Models / Backbones
-- Table: architecture, #params, pretrained source, why included
-- Mix of CNNs and Transformers if applicable
-- At least 3 architectures to show generality
+## Dataset
+- 1 dataset (pick the smallest/fastest that is relevant to the idea)
+- Justify choice: [why this dataset best stress-tests the core hypothesis]
 
-## 3. Baselines
-- Organize by category (e.g., "static methods", "online methods", "oracle upper bounds")
-- Include: method name, venue/year, key mechanism, implementation source
-- Always include: uncalibrated baseline, oracle upper bound, and the 2-3 strongest recent methods
-- Aim for 5-10 baselines
+## Baselines
+- 1-2 baselines maximum: the trivial baseline + the strongest directly competing method
+- Implementation source: [where to get reference implementation]
 
-## 4. Metrics
-- Primary metrics (main tables): 2-3 metrics
-- Secondary metrics (appendix): additional diagnostics
-- Statistical significance: seeds, confidence intervals, significance tests
+## Metrics
+- 1-2 primary metrics only
 
-## 5. Main Experiments
-For each experiment:
-- **Setup**: exact configuration, data splits, hyperparameters
-- **Hypothesis**: what you expect and why
-- **Reporting**: which tables/figures will present the results
-- **Compute estimate**: GPU hours rough estimate
-
-### Experiment 1: [name]
-### Experiment 2: [name]
-...
-Target: 4-6 main experiments
-
-## 6. Ablation Studies
-For each ablation:
-- What component/hyperparameter is varied
-- What is held fixed
-- Expected finding
-Target: 4-8 ablations
-
-## 7. Analysis Experiments
-- Failure mode analysis
-- Visualization of learned representations/parameters
-- Computational efficiency comparison
-- Qualitative examples
-Target: 3-5 analyses
-
-## 8. Resource Requirements
-- Total GPU hours estimate
-- Storage requirements
-- Available resources (from user)
+## Pilot Experiment
+- Exact setup: architecture, splits, hyperparameters, seeds
+- Compute estimate: [GPU hours for this pilot]
+- Success criterion: [e.g., "beats trivial baseline by ≥1% on metric X"]
 ```
 
-### Resource Discovery
-
-Use the compute resources already selected by the user in Phase 0 (see `plan/config.md`). Re-check GPU availability on the selected machines to get current status:
-```bash
-# Local
-nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv,noheader 2>/dev/null
-# Remote (for each selected machine)
-ssh <host> "nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv,noheader" 2>/dev/null
-```
-
-Note current resource availability in the experiment plan. If compute is limited, automatically prioritize experiments by expected impact — run the most critical experiments first and mark lower-priority ones as optional. Proceed directly to Phase 4 after saving the plan.
+Proceed directly to Phase 4 after saving the pilot plan.
 
 ---
 
@@ -782,9 +747,86 @@ Save iteration history in `experiments/results/method_iterations.md`:
 ### Iteration 2: [date]
 ...
 
-### Outcome: [PASSED → proceed to Phase 6 / FAILED → archived, rolling back to Phase 1]
+### Outcome: [PASSED → proceed to Phase 5.5 / FAILED → archived, rolling back to Phase 1]
 - Failure reason: [if failed]
 ```
+
+---
+
+## Phase 5.5: Full Experiment Planning
+
+**Triggered only after the pilot passes.** Now that the core idea is validated, design a comprehensive experiment plan that meets top-venue standards. Reviewers at CCF-A venues expect extensive empirical validation.
+
+Save to `plan/experiment_plan.md`:
+
+```markdown
+# Full Experiment Plan: [Paper Title]
+
+## 1. Datasets & Benchmarks
+- Table of ALL datasets with: name, task, #classes, #samples, shift type, source
+- Include standard benchmarks (CIFAR-C, ImageNet-C, WILDS, etc.)
+- Include domain-specific datasets relevant to the application
+- Aim for 4-8 datasets minimum
+
+## 2. Models / Backbones
+- Table: architecture, #params, pretrained source, why included
+- Mix of CNNs and Transformers if applicable
+- At least 3 architectures to show generality
+
+## 3. Baselines
+- Organize by category (e.g., "static methods", "online methods", "oracle upper bounds")
+- Include: method name, venue/year, key mechanism, implementation source
+- Always include: uncalibrated baseline, oracle upper bound, and the 2-3 strongest recent methods
+- Aim for 5-10 baselines
+
+## 4. Metrics
+- Primary metrics (main tables): 2-3 metrics
+- Secondary metrics (appendix): additional diagnostics
+- Statistical significance: seeds, confidence intervals, significance tests
+
+## 5. Main Experiments
+For each experiment:
+- **Setup**: exact configuration, data splits, hyperparameters
+- **Hypothesis**: what you expect and why
+- **Reporting**: which tables/figures will present the results
+- **Compute estimate**: GPU hours rough estimate
+
+### Experiment 1: [name]
+### Experiment 2: [name]
+...
+Target: 4-6 main experiments
+
+## 6. Ablation Studies
+For each ablation:
+- What component/hyperparameter is varied
+- What is held fixed
+- Expected finding
+Target: 4-8 ablations
+
+## 7. Analysis Experiments
+- Failure mode analysis
+- Visualization of learned representations/parameters
+- Computational efficiency comparison
+- Qualitative examples
+Target: 3-5 analyses
+
+## 8. Resource Requirements
+- Total GPU hours estimate
+- Storage requirements
+- Available resources (from plan/config.md)
+```
+
+### Resource Discovery
+
+Re-check GPU availability on the selected machines before finalizing the plan:
+```bash
+# Local
+nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv,noheader 2>/dev/null
+# Remote (for each selected machine)
+ssh <host> "nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv,noheader" 2>/dev/null
+```
+
+If compute is limited, prioritize experiments by expected impact — mark lower-priority experiments as optional. Proceed directly to Phase 6 after saving the plan.
 
 ---
 
@@ -1170,18 +1212,18 @@ Phase 0: Interactive Setup (ONLY user interaction)
 │          │ detailed method with theory, contributions       │       │
 │          │ saves: plan/proposal.md                           │       │
 │          ▼                                                  │       │
-│  Phase 3: Experiment Planning                               │       │
-│          │ datasets, baselines, ablations, compute budget    │       │
-│          │ saves: plan/experiment_plan.md                    │       │
+│  Phase 3: Pilot Experiment Design                           │       │
+│          │ 1 dataset, 1-2 baselines, success criterion       │       │
+│          │ saves: plan/pilot_experiment_plan.md              │       │
 │          ▼                                                  │       │
 │  Phase 4: Pilot Experiments                                 │       │
 │          │ implement method, reproduce baselines, pilot test │       │
-│          │ PASS? ──→ exit loop → Phase 6                    │       │
+│          │ PASS? ──→ Phase 5.5 (full plan) → exit loop      │       │
 │          │ FAIL? ──→ Phase 5                                │       │
 │          ▼                                                  │       │
 │  Phase 5: Method Iteration (max 3-5 tweaks)                 │       │
 │          │ diagnose → revise → re-pilot                     │       │
-│          │ fixed? → exit loop → Phase 6                     │       │
+│          │ fixed? → Phase 5.5 (full plan) → exit loop       │       │
 │          │ still failing after 3-5 iterations?              │       │
 │          │   → archive idea to plan/idea_history.md         │       │
 │          │   → notify-telegram: idea failed                 │       │
@@ -1191,6 +1233,10 @@ Phase 0: Interactive Setup (ONLY user interaction)
 │  or pivot topic                                                    │
 └─────────────────────────────────────────────────────────────────────┘
         │ (pilot passed)
+        ▼
+Phase 5.5: Full Experiment Planning
+        │ all datasets / baselines / ablations / analyses
+        │ saves: plan/experiment_plan.md
         ▼
 Phase 6: Full Experiments (AUTONOMOUS)
         │ monitor GPUs, greedy scheduling, run everything
@@ -1216,8 +1262,9 @@ Done → notify-telegram: pipeline finished → Hand off to user for submission
 **Interaction model:**
 - **Phase 0 is the ONLY interactive phase** — user selects venue, topic, and machines.
 - All subsequent phases run **fully autonomously** end-to-end. No further user input required.
-- Phases 1-3: autonomous (auto-select idea direction, auto-proceed through proposal and planning)
+- Phases 1-3: autonomous (auto-select idea direction, auto-proceed through proposal and pilot experiment design)
 - Phases 4-5: autonomous (run pilots, iterate method 3-5 times; if still failing, archive idea and loop back to Phase 1 with a completely new idea; consult user after every 3 failed idea rounds)
+- Phase 5.5: autonomous (full experiment planning after pilot passes)
 - Phase 6: autonomous (run everything, report when done)
 - Phases 7-9: autonomous (auto-decide on analysis, auto-write and review paper)
 - Git commit + push after every phase

@@ -23,8 +23,9 @@ Phase 0: Setup (only user interaction)
 │  Phase 2: Research Proposal                                        │
 │    method + theory + contributions → plan/proposal.md              │
 │         │                                                          │
-│  Phase 3: Experiment Planning                                      │
-│    datasets / baselines / ablations → plan/experiment_plan.md      │
+│  Phase 3: Pilot Experiment Design                                  │
+│    1 dataset / 1-2 baselines / success criterion                   │
+│    → plan/pilot_experiment_plan.md                                 │
 │         │                                                          │
 │  Phase 4: Pilot Experiments                                        │
 │    implement method → reproduce baselines → pilot run              │
@@ -44,6 +45,11 @@ Phase 0: Setup (only user interaction)
 │  continue or pivot topic ─────────────────────────────┘           │
 └────────────────────────────────────────────────────────────────────┘
          │ (pilot passed)
+         ▼
+Phase 5.5: Full Experiment Planning
+  all datasets / baselines / ablations / analyses
+  → plan/experiment_plan.md
+         │
          ▼
 Phase 6: Full Experiments  (autonomous)
   GPU monitoring + greedy scheduling + remote SSH execution
@@ -89,7 +95,8 @@ Or manually copy the contents to `~/.claude/skills/ai-research-paper/`.
 │   ├── idea_summary.md
 │   ├── idea_history.md        # Archive of all attempted ideas
 │   ├── proposal.md
-│   └── experiment_plan.md
+│   ├── pilot_experiment_plan.md  # Minimal plan for pilot (Phase 3)
+│   └── experiment_plan.md        # Full plan after pilot passes (Phase 5.5)
 ├── references/
 │   └── venue_requirements.md  # Venue submission rules fetched in real-time
 ├── experiments/
