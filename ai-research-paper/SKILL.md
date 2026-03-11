@@ -106,23 +106,38 @@ Save the collected configuration to `plan/config.md`:
 
 After saving, the pipeline proceeds fully autonomously from Phase 1 onwards. **No more user interaction needed.**
 
-### Step 0.5: Create Constraints File
+### Step 0.5: Create Constraints and Venue Requirements Files
 
-Immediately after saving `plan/config.md`, create `plan/constraints.md` by:
+Immediately after saving `plan/config.md`, create two files:
 
-1. **Set language constraint** (always English — no exceptions):
-2. **Fetch venue submission requirements in real-time** using `WebSearch` and `WebFetch`:
-   - Search for the official call-for-papers page of the target venue and year (e.g., "NeurIPS 2025 call for papers submission requirements")
-   - Extract: page limit, format (single/double column), anonymity policy, supplementary material rules, LaTeX template, submission system URL, key dates
-   - If official page is unavailable, note it and use the most recent known requirements
+#### 5a. Writing Constraints (`plan/constraints.md`)
 
-Save as `plan/constraints.md`:
+Fixed constraints that apply throughout the entire pipeline:
 
 ```markdown
 # Paper Writing Constraints
 
 ## Language
-All writing must be in **English**. No other language is permitted in the paper body, abstract, or figures.
+All writing must be in **English**. No other language is permitted in the paper body, abstract, figures, or captions.
+
+## General Writing Rules
+- Use active voice where possible
+- Every claim must be backed by a citation or experimental result
+- "Significantly" requires a statistical test; "state-of-the-art" requires a comparison table
+- Avoid vague language and padding sentences
+```
+
+#### 5b. Venue Submission Requirements (`references/venue_requirements.md`)
+
+Fetch in real-time using `WebSearch` and `WebFetch`:
+- Search: "[venue] [year] call for papers submission requirements"
+- Extract: page limit, format (single/double column), anonymity policy, supplementary material rules, LaTeX template, submission system URL, key dates
+- If official page is unavailable, note it and use the most recent known requirements
+
+Save as `references/venue_requirements.md`:
+
+```markdown
+# Venue Submission Requirements
 
 ## Venue: [venue name] [year]
 
@@ -142,14 +157,14 @@ All writing must be in **English**. No other language is permitted in the paper 
 ### Supplementary Material Rules
 [Describe what is allowed: code, proofs, extra experiments, page limits]
 
-### Other Constraints
+### Other Requirements
 [Any other venue-specific rules: ethics statement, reproducibility checklist, paper checklist, etc.]
 
 ### Source
 [URL of the official call-for-papers page fetched]
 ```
 
-Add `plan/constraints.md` to the Phase 0 git commit.
+Add both files to the Phase 0 git commit.
 
 ---
 
@@ -163,13 +178,15 @@ Every project follows this exact layout. Create it at the start:
 ├── .gitignore             # Standard Python/LaTeX ignores
 ├── plan/                  # All planning artifacts
 │   ├── config.md          # Venue, topic, compute resources (from Phase 0)
-│   ├── constraints.md     # Language + venue submission requirements (from Phase 0)
+│   ├── constraints.md     # Writing constraints: language, formatting rules (from Phase 0)
 │   ├── TODO.md            # Master todolist — tracks all phases
 │   ├── literature_review.md
 │   ├── idea_summary.md
 │   ├── idea_history.md    # Archive of ALL attempted ideas and their outcomes
 │   ├── proposal.md
 │   └── experiment_plan.md
+├── references/            # External reference materials
+│   └── venue_requirements.md  # Venue submission rules fetched in real-time (Phase 0)
 ├── experiments/           # All code and results
 │   ├── models/
 │   ├── methods/
@@ -227,10 +244,10 @@ After completing each phase, commit and push the new artifacts to GitHub. This e
 
 | After Phase | Commit message pattern | Files to commit |
 |-------------|----------------------|-----------------|
-| Phase 0 | `init: project setup — [venue] / [topic]` | `plan/config.md`, `plan/constraints.md`, `plan/TODO.md`, `README.md`, `.gitignore` |
+| Phase 0 | `init: project setup — [venue] / [topic]` | `plan/config.md`, `plan/constraints.md`, `references/venue_requirements.md`, `plan/TODO.md`, `README.md`, `.gitignore` |
 | Phase 1 | `plan: literature review and idea exploration (round N)` | `plan/literature_review.md`, `plan/idea_summary.md`, `plan/idea_debate.md`, `plan/idea_history.md`, `plan/TODO.md` |
 | Phase 2 | `plan: research proposal` | `plan/proposal.md`, `plan/TODO.md` |
-| Phase 3 | `plan: experiment plan` | `plan/experiment_plan.md`, `plan/venue_requirements.md`, `plan/TODO.md` |
+| Phase 3 | `plan: experiment plan` | `plan/experiment_plan.md`, `references/venue_requirements.md`, `plan/TODO.md` |
 | Phase 4 | `experiments: pilot — [method] on [dataset]` | `experiments/methods/`, `experiments/results/baseline_reproduction.md`, `plan/TODO.md` |
 | Phase 5 | `experiments: method iteration [N] (idea round [M])` | `experiments/methods/`, `experiments/results/method_iterations.md`, `plan/idea_history.md`, `plan/TODO.md` |
 | Phase 6 | `experiments: [experiment name] complete` | `experiments/`, `plan/TODO.md` (commit incrementally as experiments finish) |
@@ -328,7 +345,7 @@ Create `plan/TODO.md` at project initialization and keep it updated throughout t
 - [ ] → notify-telegram: Phase 7 complete
 
 ## Phase 8: Paper Writing + Figures
-- [ ] Venue requirements fetched (plan/venue_requirements.md)
+- [ ] Venue requirements fetched (references/venue_requirements.md)
 - [ ] Style file downloaded to paper/
 - [ ] Figures generated (paper/figures/)
 - [ ] Related Work section drafted
@@ -882,10 +899,10 @@ This phase combines figure generation and paper writing — they inform each oth
 
 ### 8.1: Venue Requirements & Constraints
 
-Before writing, **read `plan/constraints.md`** (created in Phase 0) — it contains:
-- **Language requirement:** All writing must be in English
-- **Page limit, format, anonymity policy, template, submission system, key dates**
-- **Supplementary material rules and other venue-specific constraints**
+Before writing, read both constraint files created in Phase 0:
+
+- **`plan/constraints.md`** — writing rules that apply throughout: language (English), style conventions
+- **`references/venue_requirements.md`** — venue submission rules: page limit, format, anonymity policy, template, submission system, key dates, supplementary rules
 
 Also **read `references/venue_guide.md`** and follow its instructions to fetch the latest venue requirements via web search. The guide contains:
 - Exact web searches to run (style file, page limits, deadlines, review criteria)
@@ -893,7 +910,7 @@ Also **read `references/venue_guide.md`** and follow its instructions to fetch t
 - Stable venue characteristics (reviewer tendencies, what works/doesn't)
 - Universal best practices (tables, figures, citations)
 
-After searching, save the results to `plan/venue_requirements.md` so they're recorded for the project.
+After searching, save the results to `references/venue_requirements.md` so they're recorded for the project.
 
 **Do NOT use memorized page limits or deadlines** — these change every year. Always verify via live web search. If `plan/constraints.md` dates are stale, re-fetch and update it.
 
@@ -1016,7 +1033,7 @@ Run through this checklist systematically. Fix issues as you find them:
 - [ ] Limitations section is honest and specific (not generic disclaimers)
 
 **Formatting:**
-- [ ] Paper is within the page limit (check `plan/venue_requirements.md`)
+- [ ] Paper is within the page limit (check `references/venue_requirements.md`)
 - [ ] No orphan/widow lines
 - [ ] All figures readable at printed size
 - [ ] Tables use `booktabs`, no vertical lines, best results bolded
