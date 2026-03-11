@@ -126,6 +126,11 @@ All writing must be in **English**. No other language is permitted in the paper 
 - Every claim must be backed by a citation or experimental result
 - "Significantly" requires a statistical test; "state-of-the-art" requires a comparison table
 - Avoid vague language and padding sentences
+
+## Python Environment
+- Always use `uv` for package management and environment setup, never `pip` or `pip3`
+- Install packages with `uv add <package>` or `uv pip install <package>`
+- Run scripts with `uv run python script.py`
 ```
 
 #### 5b. Venue Submission Requirements (`references/venue_requirements.md`)
