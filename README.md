@@ -1,6 +1,6 @@
 # Skills
 
-A collection of Claude Code skills for AI research workflows — from idea to publication to peer review.
+A collection of Claude Code skills for AI research workflows and developer tooling.
 
 ## Installation
 
@@ -78,9 +78,38 @@ claude skill install Linwei94/skills/paper-reviewer
 
 ---
 
+### [`publish-pip`](./publish-pip/)
+
+**Automated PyPI publishing workflow via GitHub Release.**
+
+Handles the full version bump → commit → push → GitHub Release pipeline for Python packages. Automatically discovers version locations across different project structures (`pyproject.toml`, `setup.py`, `__init__.py`, etc.) and keeps them in sync.
+
+#### Workflow
+
+| Step | Description |
+|------|-------------|
+| 1. Discover | Find all version definitions in the project |
+| 2. Propose | Suggest version bump (patch/minor/major) based on git history |
+| 3. Update | Sync version across all locations |
+| 4. Publish | Commit, push, and create GitHub Release with auto-generated notes |
+
+#### Key Features
+
+- **Auto-discovery** — Finds version strings across different project structures.
+- **Smart suggestions** — Analyzes git log to recommend patch/minor/major bump.
+- **Release notes** — Generates changelog from commits since last tag.
+- **GitHub Action integration** — Creates Release that triggers PyPI publish workflow.
+
+```bash
+claude skill install Linwei94/skills/publish-pip
+```
+
+---
+
 ## Overview
 
 | Skill | Purpose | Agents | Target Users |
 |-------|---------|--------|--------------|
 | **ai-research-paper** | End-to-end research pipeline (9 phases) | 12 debate agents + Area Chair | Researchers submitting to top-tier venues |
 | **paper-reviewer** | Peer review assistance | User-driven | Conference / journal reviewers |
+| **publish-pip** | PyPI publishing via GitHub Release | — | Python package maintainers |
