@@ -22,16 +22,42 @@ claude skill install <your-github-username>/ai-research-paper-skill
 
 Or manually copy the contents to `~/.claude/skills/ai-research-paper/`.
 
-## Structure
+## Project Structure (created per paper)
+
+```
+<project-root>/
+├── README.md
+├── .gitignore
+├── plan/
+│   ├── config.md              # Venue, topic, compute (Phase 0)
+│   ├── constraints.md         # Writing constraints: language (English), style rules
+│   ├── TODO.md                # Master progress tracker
+│   ├── literature_review.md
+│   ├── idea_summary.md
+│   ├── idea_history.md        # Archive of all attempted ideas
+│   ├── proposal.md
+│   └── experiment_plan.md
+├── references/
+│   └── venue_requirements.md  # Venue submission rules fetched in real-time
+├── experiments/
+│   ├── methods/
+│   ├── scripts/
+│   ├── results/
+│   └── archived/
+└── paper/
+    ├── main.tex
+    ├── figures/
+    └── *.sty
+```
+
+## Skill Files
 
 ```
 ai-research-paper/
-├── SKILL.md              # Main skill definition (9 phases)
-├── agents/
-│   ├── idea_debate.md    # 6 reviewer agents + AC for idea refinement
-│   └── result_debate.md  # 6 analyst agents for result analysis
-└── references/
-    └── venue_guide.md    # CCF-A venue requirements and best practices
+├── SKILL.md              # Main skill definition (all 9 phases + venue guide)
+└── agents/
+    ├── idea_debate.md    # 6 reviewer agents + AC for idea refinement
+    └── result_debate.md  # 6 analyst agents for result analysis
 ```
 
 ## Features

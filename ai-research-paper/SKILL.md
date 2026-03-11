@@ -904,15 +904,37 @@ Before writing, read both constraint files created in Phase 0:
 - **`plan/constraints.md`** — writing rules that apply throughout: language (English), style conventions
 - **`references/venue_requirements.md`** — venue submission rules: page limit, format, anonymity policy, template, submission system, key dates, supplementary rules
 
-Also **read `references/venue_guide.md`** and follow its instructions to fetch the latest venue requirements via web search. The guide contains:
-- Exact web searches to run (style file, page limits, deadlines, review criteria)
-- Venue official website URLs
-- Stable venue characteristics (reviewer tendencies, what works/doesn't)
-- Universal best practices (tables, figures, citations)
+Fetch the latest venue requirements via web search. Run ALL of the following searches:
 
-After searching, save the results to `references/venue_requirements.md` so they're recorded for the project.
+1. **Style file and template**: `"[venue] [year] latex template" OR "[venue] [year] style file"` — download the `.sty`/`.cls` file to `paper/`
+2. **Submission guidelines**: `"[venue] [year] call for papers" OR "[venue] [year] submission guidelines"` — page limit, anonymization, supplementary policy, code policy
+3. **Deadlines**: `"[venue] [year] deadline" OR "[venue] [year] important dates"`
+4. **Review criteria**: `"[venue] [year] reviewer guidelines" OR "[venue] [year] review form"` — some venues (NeurIPS, ICML) have mandatory checklists
 
-**Do NOT use memorized page limits or deadlines** — these change every year. Always verify via live web search. If `plan/constraints.md` dates are stale, re-fetch and update it.
+**Venue official websites (starting points):**
+
+| Venue | Website |
+|-------|---------|
+| NeurIPS | https://neurips.cc |
+| ICML | https://icml.cc |
+| ICLR | https://iclr.cc |
+| CVPR | https://cvpr.thecvf.com |
+| ECCV | https://eccv.ecva.net |
+| ACL | https://aclweb.org |
+| AAAI | https://aaai.org |
+
+After searching, update `references/venue_requirements.md` with the latest info.
+
+**Do NOT use memorized page limits or deadlines** — these change every year. Always verify via live web search.
+
+**Venue characteristics (stable):**
+
+- **NeurIPS**: Values theory + empirical equally. Appreciates honest limitations. Dislikes pure empirical with marginal gains.
+- **ICML**: More theory-oriented. Formal analysis and principled justification expected. Appendix proofs for all theorems.
+- **ICLR**: Open review — rebuttals are public and matter. High value on reproducibility and code submission.
+- **CVPR/ECCV**: Expect strong visual/qualitative results. Side-by-side comparison figures important. Large-scale benchmarks (ImageNet, COCO) expected.
+- **ACL**: Error analysis expected. Human evaluation required for generation tasks. ARR rolling review.
+- **AAAI**: Broader AI scope. Tighter page limits. Ethical statement may be required.
 
 ### 8.2: Figure Design
 
@@ -1104,7 +1126,7 @@ After addressing all review feedback:
 
 ## Reference: Venue-Specific Notes
 
-Read `references/venue_guide.md` for detailed per-venue guidance (reviewer criteria, common acceptance/rejection patterns, tips).
+See Section 8.1 for venue characteristics and web search instructions to fetch current requirements.
 
 ---
 
